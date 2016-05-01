@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import yaml
+
+
 class Piece():
     def __init__(self, rsi_value, area):
         self.rsi_value = rsi_value  # m^2*K/W
@@ -8,19 +11,30 @@ class Piece():
 def watts_lost_from(piece, temperature_delta):
     """
     Calculates heat loss from area, rsi value and temperature delta
-
     temperature_delta: K
-
     Returns heat loss in Watts
     """
     return temperature_delta / piece.rsi_value * piece.area
+
+
+def load_pieces_from_yaml(f):
+    pieces = []
+
+    with open(f, 'r') as stream:
+        yaml_data = yaml.load(stream)
+
+        for piece in yaml_data:
+            area = piece['width'] * piece['length']
+            pieces.append(Piece(piece['rsi'], area))
+
+    return pieces
 
 
 def main():
     total_loss_watts = 0
     temperature_delta = 10
 
-    pieces = [Piece(2, 10)]
+    pieces = load_pieces_from_yaml('example.yaml')
 
     for p in pieces:
         piece_loss = watts_lost_from(p, temperature_delta)
