@@ -1,7 +1,18 @@
-- rsi: 2
-  width: 1
-  length: 10
+collectable_width: 0.6
+collectable_length: 1
 
-- rsi: 5
-  width: 1
-  length: 10
+pieces:
+- name: 'top'
+  rsi: 0.26 # R value in metric
+  width: 0.61
+  length: 1.22
+
+- name: 'sides'
+  rimp: 7 # R value in imperial
+  width: 0.14
+  length: 3.657
+
+- name: 'bottom'
+  rimp: 5.4 # R value in imperial
+  width: 0.61
+  length: 1.22
