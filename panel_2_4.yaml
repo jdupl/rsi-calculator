@@ -1,0 +1,18 @@
+collectable_width: 0.6
+collectable_length: 1
+
+pieces:
+- name: 'top'
+  rimp: 1 # R value in imperial
+  width: 0.61
+  length: 1.22
+
+- name: 'sides'
+  rimp: 7 # R value in imperial
+  width: 0.14
+  length: 3.66
+
+- name: 'bottom'
+  rimp: 5.4 # Isofoil 3/4"
+  width: 0.61
+  length: 1.22

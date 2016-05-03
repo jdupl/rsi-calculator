@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import yaml
+import sys
 
 
 class Piece():
@@ -19,13 +20,12 @@ def watts_lost_from(piece, temperature_delta):
 
 def load_yaml(f):
     pieces = []
-    sun_power = 500  # Watt/m^2
 
     with open(f, 'r') as stream:
         yaml_data = yaml.load(stream)
 
-        power = yaml_data['collectable_width'] * \
-            yaml_data['collectable_length'] * sun_power
+        collectable_area = yaml_data['collectable_width'] * \
+            yaml_data['collectable_length']
 
         for piece in yaml_data['pieces']:
             if 'rsi' in piece:
@@ -37,11 +37,19 @@ def load_yaml(f):
 
             area = piece['width'] * piece['length']
             pieces.append(Piece(rsi, area))
-    return power, pieces
+    return collectable_area, pieces
 
 
 def main():
-    power, pieces = load_yaml('panel_2_4.yaml')
+    if len(sys.argv) != 2:
+        print('Please provide the path to the YAML configuration !')
+        exit(1)
+
+    sun_power = 500  # Watt/m^2
+
+    collectable_area, pieces = load_yaml(sys.argv[1])
+    raw_power = collectable_area * sun_power
+    print('Total raw power from sun @%dW/m^2: %dW' % (sun_power, raw_power))
 
     for t in range(1, 10):
         total_loss_watts = 0
@@ -51,7 +59,7 @@ def main():
             piece_loss = watts_lost_from(p, temperature_delta)
             total_loss_watts += piece_loss
 
-        efficiency = (power - total_loss_watts) / power * 100.0
+        efficiency = (raw_power - total_loss_watts) / raw_power * 100.0
         print('Total heat loss %d Watts @ %d K delta. Eff %d%%' %
               (total_loss_watts, temperature_delta, efficiency))
 
